@@ -25,9 +25,9 @@ public class LoginTest {
         login.setLastName("bekker");
     }
 
-    // ==========================================
-    // 1. assertEquals Unit Tests
-    // ==========================================
+    
+    // assertEquals Unit Tests
+    
 
     @Test
     public void testUsernameCorrectlyFormattedMessage() {
@@ -77,9 +77,9 @@ public class LoginTest {
         assertEquals(expected, actual);
     }
 
-    // ==========================================
-    // 2. assertTrue / assertFalse Unit Tests
-    // ==========================================
+    
+    // assertTrue / assertFalse Unit Tests
+    
 
     @Test
     public void testLoginSuccessful() {
