@@ -15,99 +15,112 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Student
  */
 public class LoginTest {
-    
-   private Login login;
+
+    private Login login;
 
     @BeforeEach
     public void setUp() {
         login = new Login();
         login.setFirstName("Kyle");
-        login.setLastName("ll");
+        login.setLastName("bekker");
     }
 
-    // --- USERNAME TESTS ---
-    @Test
-    public void testUsernameCorrectlyFormatted() {
-        login.setUsername("kyl_1");
-        assertTrue(login.checkUserName());
-    }
+    // ==========================================
+    // 1. assertEquals Unit Tests
+    // ==========================================
 
     @Test
-    public void testUsernameIncorrectlyFormatted() {
-        login.setUsername("kyle!!!!!!!.");
-        assertFalse(login.checkUserName());
-    }
-
-    // --- PASSWORD TESTS ---
-    @Test
-    public void testPasswordMeetsComplexityRequirements() {
-        login.setPassword("Mulisa@prog99!");
-        assertTrue(login.checkPasswordComplexity());
+    public void testUsernameCorrectlyFormattedMessage() {
+        login.registerUser("kyl_1", "Ch&&sec@ke99!", "+27838968976");
+        boolean loginSuccess = login.loginUser("kyl_1", "Ch&&sec@ke99!");
+        
+        String expected = "Welcome Kyle ,bekker it is great to see you.";
+        String actual = login.returnLoginStatus(loginSuccess);
+        
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void testPasswordDoesNotMeetComplexityRequirements() {
-        login.setPassword("password");
-        assertFalse(login.checkPasswordComplexity());
-    }
-
-    // --- CELL PHONE TESTS ---
-    @Test
-    public void testCellPhoneNumberCorrectlyFormatted() {
-        login.setCellPhoneNumber("+27838968976");
-        assertTrue(login.checkCellPhoneNumber());
+    public void testUsernameIncorrectlyFormattedMessage() {
+        String expected = "Username is not correctly formatted; please ensure that your username contains an underscore and is no more than five characters in length.";
+        String actual = login.registerUser("kyle!!!!!!!", "Ch&&sec@ke99!", "+27838968976");
+        
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void testCellPhoneNumberIncorrectlyFormatted() {
-        login.setCellPhoneNumber("08966553");
-        assertFalse(login.checkCellPhoneNumber());
+    public void testPasswordMeetsComplexityMessage() {
+        String expected = "User registered successfully.";
+        String actual = login.registerUser("kyl_1", "Ch&&sec@ke99!", "+27838968976");
+        
+        assertEquals(expected, actual);
     }
 
-    // --- LOGIN VERIFICATION TESTS ---
+    @Test
+    public void testPasswordDoesNotMeetComplexityMessage() {
+        String expected = "Password is not correctly formatted; please ensure that the password contains at least eight characters, a capital letter, a number, and a special character.";
+        String actual = login.registerUser("kyl_1", "password", "+27838968976");
+        
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testCellPhoneCorrectlyFormattedMessage() {
+        assertTrue(login.checkCellPhoneNumber("+27838968976"));
+    }
+
+    @Test
+    public void testCellPhoneIncorrectlyFormattedMessage() {
+        String expected = "Cell number is incorrectly formatted or does not contain an international code; please correct the number and try again.";
+        String actual = login.registerUser("kyl_1", "Ch&&sec@ke99!", "08966553");
+        
+        assertEquals(expected, actual);
+    }
+
+    // ==========================================
+    // 2. assertTrue / assertFalse Unit Tests
+    // ==========================================
+
     @Test
     public void testLoginSuccessful() {
-        login.setUsername("kyl_1");
-        login.setPassword("Ch&&sec@ke99!");
+        login.registerUser("kyl_1", "Ch&&sec@ke99!", "+27838968976");
         assertTrue(login.loginUser("kyl_1", "Ch&&sec@ke99!"));
     }
 
     @Test
     public void testLoginFailed() {
-        login.setUsername("kyl_1");
-        login.setPassword("Ch&&sec@ke99!");
+        login.registerUser("kyl_1", "Ch&&sec@ke99!", "+27838968976");
         assertFalse(login.loginUser("kyl_1", "wrongpassword"));
     }
 
-    // --- MESSAGE STRING TESTS ---
     @Test
-    public void testUsernameIncorrectMessage() {
-        login.setUsername("kyle!!!!!!!.");
-        login.setPassword("Ch&&sec@ke99!");
-        login.setCellPhoneNumber("+27838968976");
-        
-        String expected = "Username is not correctly formatted; please ensure that your username contains an underscore and is no more than five characters in length.";
-        assertEquals(expected, login.registerUser());
+    public void testUsernameCorrectlyFormatted() {
+        assertTrue(login.checkUserName("kyl_1"));
     }
 
     @Test
-    public void testPasswordIncorrectMessage() {
-        login.setUsername("kyl_1");
-        login.setPassword("password");
-        login.setCellPhoneNumber("+27838968976");
-
-        String expected = "Password is not correctly formatted; please ensure that the password contains at least eight characters, a capital letter, a number, and a special character.";
-        assertEquals(expected, login.registerUser());
+    public void testUsernameIncorrectlyFormatted() {
+        assertFalse(login.checkUserName("kyle!!!!!!!"));
     }
 
     @Test
-    public void testCellPhoneIncorrectMessage() {
-        login.setUsername("kyl_1");
-        login.setPassword("Ch&&sec@ke99!");
-        login.setCellPhoneNumber("08966553");
+    public void testPasswordMeetsComplexity() {
+        assertTrue(login.checkPasswordComplexity("Ch&&sec@ke99!"));
+    }
 
-        String expected = "Cell number is incorrectly formatted or does not contain an international code; please correct the number and try again.";
-        assertEquals(expected, login.registerUser());
+    @Test
+    public void testPasswordDoesNotMeetComplexity() {
+        assertFalse(login.checkPasswordComplexity("password"));
+    }
+
+    @Test
+    public void testCellPhoneCorrectlyFormatted() {
+        assertTrue(login.checkCellPhoneNumber("+27838968976"));
+    }
+
+    @Test
+    public void testCellPhoneIncorrectlyFormatted() {
+        assertFalse(login.checkCellPhoneNumber("08966553"));
     }
 }
     

@@ -11,49 +11,79 @@ import java.util.Scanner;
  * @author Student
  */
 public class ProgPOE {
-       public static void main(String[] args) {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Login userLogin = new Login();
+        Login loginSystem = new Login();
 
-        System.out.println("=== USER REGISTRATION ===");
+        System.out.println("--- REGISTRATION ---");
         
         System.out.print("Enter First Name: ");
-        userLogin.setFirstName(scanner.nextLine());
-
+        loginSystem.setFirstName(scanner.nextLine());
+        
         System.out.print("Enter Last Name: ");
-        userLogin.setLastName(scanner.nextLine());
+        loginSystem.setLastName(scanner.nextLine());
 
-        System.out.print("Enter Username: ");
-        userLogin.setUsername(scanner.nextLine());
-
-        System.out.print("Enter Password: ");
-        userLogin.setPassword(scanner.nextLine());
-
-        System.out.print("Enter Cell Phone Number (e.g., +27838968976): ");
-        userLogin.setCellPhoneNumber(scanner.nextLine());
-
-        System.out.println("\n--- Registration Status ---");
-        String registrationMessage = userLogin.registerUser();
-        System.out.println(registrationMessage);
-
-        // Proceed to login only if registration succeeded
-        if (userLogin.checkUserName() && userLogin.checkPasswordComplexity() && userLogin.checkCellPhoneNumber()) {
-            System.out.println("\n=== USER LOGIN ===");
-            
-            System.out.print("Enter Username: ");
-            String loginUsername = scanner.nextLine();
-
-            System.out.print("Enter Password: ");
-            String loginPassword = scanner.nextLine();
-
-            boolean loginSuccess = userLogin.loginUser(loginUsername, loginPassword);
-            System.out.println(userLogin.returnLoginStatus(loginSuccess));
-        } else {
-            System.out.println("\nRegistration failed. Please fix the formatting errors above and run again.");
+        // Username Registration
+        String username;
+        while (true) {
+            System.out.print("Enter a Username: ");
+            username = scanner.nextLine();
+            if (loginSystem.checkUserName(username)) {
+                System.out.println("Username successfully captured.");
+                break;
+            } else {
+                System.out.println("Username is not correctly formatted; please ensure that your username contains an underscore and is no more than five characters in length.");
+            }
         }
 
+        // Password Registration
+        String password;
+        while (true) {
+            System.out.print("Enter a Password: ");
+            password = scanner.nextLine();
+            if (loginSystem.checkPasswordComplexity(password)) {
+                System.out.println("Password successfully captured.");
+                break;
+            } else {
+                System.out.println("Password is not correctly formatted; please ensure that the password contains at least eight characters, a capital letter, a number, and a special character.");
+            }
+        }
+
+        // Cell Phone Registration
+        String cellNumber;
+        while (true) {
+            System.out.print("Enter an International Cell Phone Number (e.g., +27838968976): ");
+            cellNumber = scanner.nextLine();
+            if (loginSystem.checkCellPhoneNumber(cellNumber)) {
+                System.out.println("Cell number successfully captured.");
+                break;
+            } else {
+                System.out.println("Cell number is incorrectly formatted or does not contain an international code; please correct the number and try again.");
+            }
+        }
+
+        // Finalize Registration
+        String regStatus = loginSystem.registerUser(username, password, cellNumber);
+        System.out.println(regStatus);
+
+        System.out.println("\n--- LOGIN ---");
+        
+        // Login Loop
+        while (true) {
+            System.out.print("Enter Username: ");
+            String loginUser = scanner.nextLine();
+            
+            System.out.print("Enter Password: ");
+            String loginPass = scanner.nextLine();
+
+            boolean isSuccess = loginSystem.loginUser(loginUser, loginPass);
+            System.out.println(loginSystem.returnLoginStatus(isSuccess));
+
+            if (isSuccess) {
+                break; // Exit loop on successful login
+            }
+        }
+        
         scanner.close();
     }
-   
-    
 }
