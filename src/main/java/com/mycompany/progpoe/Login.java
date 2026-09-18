@@ -58,7 +58,6 @@ public class Login {
     }
 
     // Method to check if the cell phone number meets international standards
-    // Reference for regex logic: https://stackoverflow.com/questions/36256157/regex-for-international-phone-numbers
     public boolean checkCellPhoneNumber(String cellNumber) {
         // Regex ensures it starts with '+' followed by 1 to 3 country code digits, 
         // and then the rest of the number up to 10 digits as per the test data provided.
