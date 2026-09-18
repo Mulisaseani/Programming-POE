@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
  *
  * @author Student
  */
+
+// declaration of variables
 public class Login {
     private String username;
     private String password;
@@ -86,11 +88,7 @@ public class Login {
     /**
      * Checks that the cell phone number starts with an international country code (+)
      * and follows valid length requirements.
-     * 
-     * Attribution / Reference:
-     * Regular Expression pattern adapted from OWASP Validation Regex Guidelines 
-     * and South African E.164 phone format standards.
-     
+    
      */
     public boolean checkCellPhoneNumber() {
         if (this.cellPhoneNumber == null) {

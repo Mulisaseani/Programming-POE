@@ -21,20 +21,20 @@ public class LoginTest {
     @BeforeEach
     public void setUp() {
         login = new Login();
-        login.setFirstName("Mulisa");
+        login.setFirstName("Kyle");
         login.setLastName("ll");
     }
 
     // --- USERNAME TESTS ---
     @Test
     public void testUsernameCorrectlyFormatted() {
-        login.setUsername("mu_1");
+        login.setUsername("kyl_1");
         assertTrue(login.checkUserName());
     }
 
     @Test
     public void testUsernameIncorrectlyFormatted() {
-        login.setUsername("mulisa!!!!!!!.");
+        login.setUsername("kyle!!!!!!!.");
         assertFalse(login.checkUserName());
     }
 
