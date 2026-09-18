@@ -18,11 +18,15 @@ public class LoginTest {
 
     private Login login;
 
+    
+     // The @BeforeEach makes this setup method runs before EVERY single @Test method. 
+     // starts with a clean slate, preventing leftover data from one test from messing with another test.
+     
     @BeforeEach
     public void setUp() {
         login = new Login();
         login.setFirstName("Kyle");
-        login.setLastName("bekker");
+        login.setLastName("Seani");
     }
 
     
@@ -34,7 +38,7 @@ public class LoginTest {
         login.registerUser("kyl_1", "Ch&&sec@ke99!", "+27838968976");
         boolean loginSuccess = login.loginUser("kyl_1", "Ch&&sec@ke99!");
         
-        String expected = "Welcome Kyle ,bekker it is great to see you.";
+        String expected = "Welcome Kyle ,Seani it is great to see you.";
         String actual = login.returnLoginStatus(loginSuccess);
         
         assertEquals(expected, actual);
