@@ -20,6 +20,9 @@ public class Login {
     private String firstName;
     private String lastName;
     private String cellPhoneNumber;
+    
+    
+    //Setter Methods that allow external code to safely assign values to the private FirstName and LastName variables
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
