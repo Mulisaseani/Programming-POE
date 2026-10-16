@@ -84,6 +84,109 @@ public class ProgPOE {
             }
         }
         
+        // ==========================================
+        // PART 2: QuickChat Application Feature
+        // ==========================================
+        
+        System.out.println("\nWelcome to QuickChat.");
+
+        boolean running = true;
+        int totalMessagesSent = 0;
+
+        // Main Menu Loop
+        while (running) {
+            System.out.println("\nPlease select an option:");
+            System.out.println("1) Send Messages");
+            System.out.println("2) Show recently sent messages");
+            System.out.println("3) Quit");
+            System.out.print("Option: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // consume newline character
+
+            switch (choice) {
+                case 1:
+                    System.out.print("How many messages would you like to enter? ");
+                    int totalToEnter = scanner.nextInt();
+                    scanner.nextLine(); // consume newline character
+
+                    for (int i = 0; i < totalToEnter; i++) {
+                        System.out.println("\n--- Entering Message " + (i + 1) + " of " + totalToEnter + " ---");
+                        Message msg = new Message();
+
+                        // 1. Recipient Cell Input & Validation
+                        String recipient;
+                        while (true) {
+                            System.out.print("Enter Recipient Cell Number: ");
+                            recipient = scanner.nextLine();
+                            String validation = msg.checkRecipientCell(recipient);
+                            System.out.println(validation);
+                            if (validation.equals("Cell phone number successfully captured.")) {
+                                msg.setRecipientCell(recipient);
+                                break;
+                            }
+                        }
+
+                        // 2. Message Text Input & Validation
+                        String text;
+                        while (true) {
+                            System.out.print("Enter Message (Max 250 characters): ");
+                            text = scanner.nextLine();
+                            String lengthStatus = msg.validateMessageLength(text);
+                            if (lengthStatus.equals("Message ready to send.")) {
+                                msg.setMessageText(text);
+                                break;
+                            } else {
+                                System.out.println(lengthStatus);
+                            }
+                        }
+
+                        // 3. Generate Message ID and Message Hash
+                        String msgID = msg.generateMessageID();
+                        String msgHash = msg.createMessageHash(msgID, i, text);
+
+                        System.out.println("Message ID generated: " + msgID);
+                        System.out.println("Message Hash generated: " + msgHash);
+
+                        // 4. Action Choice (Send, Disregard, or Store)
+                        System.out.println("\nChoose action:");
+                        System.out.println("1) Send Message");
+                        System.out.println("2) Disregard Message");
+                        System.out.println("3) Store Message in a JSON file");
+                        System.out.print("Choice: ");
+                        int action = scanner.nextInt();
+                        scanner.nextLine(); // consume newline character
+
+                        String actionResult = msg.sentMessage(action);
+                        System.out.println(actionResult);
+
+                        if (action == 1) {
+                            totalMessagesSent++;
+                        }
+
+                        // Display full message details
+                        System.out.println("\n--- Message Details ---");
+                        System.out.println(msg.printMessages());
+                    }
+
+                    System.out.println("\nTotal messages sent during this session: " + totalMessagesSent);
+                    break;
+
+                case 2:
+                    System.out.println("Coming Soon.");
+                    break;
+
+                case 3:
+                    System.out.println("Thank you for using QuickChat. Goodbye!");
+                    running = false;
+                    break;
+
+                default:
+                    System.out.println("Invalid option. Please choose 1, 2, or 3.");
+                    break;
+            }
+        }
+        
         scanner.close();
     }
 }
