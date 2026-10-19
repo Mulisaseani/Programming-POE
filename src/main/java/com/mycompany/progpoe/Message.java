@@ -83,7 +83,7 @@ public class Message {
     /**
      * Stores the current message object formatted as a JSON object into a local 'messages.json' file.
      * Uses standard FileWriter with 'append = true' so new messages don't overwrite previous ones.
-     * Reference: https://www.w3schools.com/java/java_files_create.asp
+     * Reference:  https://www.w3schools.com/java/java_files_create.asp
      */
     public String storeMessage() {
         // 1. Manually format message properties into valid JSON structure[cite: 12]
@@ -97,7 +97,7 @@ public class Message {
         // 2. Open 'messages.json' and append the new JSON entry[cite: 13, 14]
         try (FileWriter fileWriter = new FileWriter("messages.json", true)) {
             fileWriter.write(jsonContent);
-            return "Message successfully stored.";
+            return "Message Successfully Stored.";
         } catch (IOException e) {
             return "Failed to store message: " + e.getMessage();
         }
