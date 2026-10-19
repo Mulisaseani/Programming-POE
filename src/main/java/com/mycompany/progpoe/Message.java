@@ -4,6 +4,9 @@
  */
 package com.mycompany.progpoe;
 import java.util.Random;
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**
  *
  * @author Student
@@ -77,10 +80,27 @@ public class Message {
         }
     }
 
-    // Simulates storing the message as a JSON formatted string
-    // Reference: JSON structure specification for chat apps
+    /**
+     * Stores the current message object formatted as a JSON object into a local 'messages.json' file.
+     * Uses standard FileWriter with 'append = true' so new messages don't overwrite previous ones.
+     * Reference: https://www.w3schools.com/java/java_files_create.asp
+     */
     public String storeMessage() {
-        return "Message successfully stored.";
+        // 1. Manually format message properties into valid JSON structure[cite: 12]
+        String jsonContent = "{\n" +
+                "  \"messageID\": \"" + messageID + "\",\n" +
+                "  \"messageHash\": \"" + messageHash + "\",\n" +
+                "  \"recipient\": \"" + recipientCell + "\",\n" +
+                "  \"message\": \"" + messageText + "\"\n" +
+                "}\n";
+
+        // 2. Open 'messages.json' and append the new JSON entry[cite: 13, 14]
+        try (FileWriter fileWriter = new FileWriter("messages.json", true)) {
+            fileWriter.write(jsonContent);
+            return "Message successfully stored.";
+        } catch (IOException e) {
+            return "Failed to store message: " + e.getMessage();
+        }
     }
 
     // Returns full formatted details of a message
