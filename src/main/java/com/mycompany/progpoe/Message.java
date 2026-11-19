@@ -46,13 +46,14 @@ public class Message {
     // Generates a random 10-digit Message ID
     public String generateMessageID() {
         Random random = new Random();
-        StringBuilder sb = new StringBuilder();
+        String id = "";
         for (int i = 0; i < 10; i++) {
-            sb.append(random.nextInt(10));
+            id = id + String.valueOf(random.nextInt(10));
         }
-        this.messageID = sb.toString();
+        this.messageID = id.substring(0, 10);
         return this.messageID;
     }
+    
 
     // Creates the Message Hash: First 2 digits of ID : Message Number : First and Last words in ALL CAPS
     public String createMessageHash(String messageID, int messageNum, String message) {
@@ -82,8 +83,7 @@ public class Message {
 
     /**
      * Stores the current message object formatted as a JSON object into a local 'messages.json' file.
-     * Uses standard FileWriter with 'append = true' so new messages don't overwrite previous ones.
-     * Reference:  https://www.w3schools.com/java/java_files_create.asp
+   
      */
     public String storeMessage() {
         // 1. Manually format message properties into valid JSON structure[cite: 12]
