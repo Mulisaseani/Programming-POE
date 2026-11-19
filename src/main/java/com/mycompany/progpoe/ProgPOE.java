@@ -110,7 +110,7 @@ public class ProgPOE {
             System.out.print("Option: ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline character
+            scanner.nextLine(); // consume newline characters
 
             switch (choice) {
                 case 1:
