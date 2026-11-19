@@ -3,14 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.progpoe;
-import java.util.Random;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Random;
 
-/**
- *
- * @author Student
- */
 public class Message {
 
     private String messageID;
@@ -18,22 +16,21 @@ public class Message {
     private String messageText;
     private String messageHash;
 
-    // Checks if the message ID is no more than 10 characters long
+    // Checks if message ID is no more than 10 characters[cite: 14]
     public boolean checkMessageID(String messageID) {
         return messageID != null && messageID.length() <= 10;
     }
 
-    // Validates that the recipient cell number starts with '+' and is no more than 10 digits after/including length rules
-    // Reuses the regex logic established in Part 1
+    // Checks strictly for +27 followed by 9 digits[cite: 14, 15]
     public String checkRecipientCell(String cellNumber) {
-        if (cellNumber != null && cellNumber.startsWith("+27") && cellNumber.length() <= 13) {
+        if (cellNumber != null && cellNumber.matches("^\\+27\\d{9}$")) {
             return "Cell phone number successfully captured.";
         } else {
             return "Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.";
         }
     }
 
-    // Validates message length <= 250 characters
+    // Validates message length <= 250 characters[cite: 12, 15]
     public String validateMessageLength(String message) {
         if (message.length() <= 250) {
             return "Message ready to send.";
@@ -43,7 +40,7 @@ public class Message {
         }
     }
 
-    // Generates a random 10-digit Message ID
+    // Generates a random 10-digit Message ID using String manipulation[cite: 12, 23]
     public String generateMessageID() {
         Random random = new Random();
         String id = "";
@@ -53,21 +50,20 @@ public class Message {
         this.messageID = id.substring(0, 10);
         return this.messageID;
     }
-    
 
-    // Creates the Message Hash: First 2 digits of ID : Message Number : First and Last words in ALL CAPS
+    // Creates Message Hash: First 2 digits of ID : Message Number : First & Last words in ALL CAPS[cite: 12, 14]
     public String createMessageHash(String messageID, int messageNum, String message) {
         String firstTwoDigits = messageID.substring(0, 2);
-        
+
         String[] words = message.trim().split("\\s+");
         String firstWord = words[0].replaceAll("[^a-zA-Z0-9]", "");
         String lastWord = words[words.length - 1].replaceAll("[^a-zA-Z0-9]", "");
-        
+
         this.messageHash = (firstTwoDigits + ":" + messageNum + ":" + firstWord + lastWord).toUpperCase();
         return this.messageHash;
     }
 
-    // Process user choice to Send, Disregard, or Store message
+    // Processes user action: 1 = Send, 2 = Disregard, 3 = Store[cite: 13, 14, 16]
     public String sentMessage(int option) {
         switch (option) {
             case 1:
@@ -82,28 +78,47 @@ public class Message {
     }
 
     /**
-     * Stores the current message object formatted as a JSON object into a local 'messages.json' file.
-   
+     * Writes messages as a valid JSON array [ { ... }, { ... } ] in 'messages.json'[cite: 13, 14].
+     * Reference / Attribution: https://www.w3schools.com/java/java_files_create.asp[cite: 24]
      */
     public String storeMessage() {
-        // 1. Manually format message properties into valid JSON structure[cite: 12]
-        String jsonContent = "{\n" +
-                "  \"messageID\": \"" + messageID + "\",\n" +
-                "  \"messageHash\": \"" + messageHash + "\",\n" +
-                "  \"recipient\": \"" + recipientCell + "\",\n" +
-                "  \"message\": \"" + messageText + "\"\n" +
-                "}\n";
+        String newJsonObject = "  {\n" +
+                "    \"messageID\": \"" + messageID + "\",\n" +
+                "    \"messageHash\": \"" + messageHash + "\",\n" +
+                "    \"recipient\": \"" + recipientCell + "\",\n" +
+                "    \"message\": \"" + messageText + "\"\n" +
+                "  }";
 
-        // 2. Open 'messages.json' and append the new JSON entry[cite: 13, 14]
-        try (FileWriter fileWriter = new FileWriter("messages.json", true)) {
-            fileWriter.write(jsonContent);
-            return "Message Successfully Stored.";
+        try {
+            File file = new File("messages.json");
+            String finalJsonArray;
+
+            if (file.exists() && file.length() > 0) {
+                String existing = Files.readString(file.toPath()).trim();
+                if (existing.startsWith("[") && existing.endsWith("]")) {
+                    String inner = existing.substring(1, existing.length() - 1).trim();
+                    if (inner.isEmpty()) {
+                        finalJsonArray = "[\n" + newJsonObject + "\n]";
+                    } else {
+                        finalJsonArray = "[\n" + inner + ",\n" + newJsonObject + "\n]";
+                    }
+                } else {
+                    finalJsonArray = "[\n" + newJsonObject + "\n]";
+                }
+            } else {
+                finalJsonArray = "[\n" + newJsonObject + "\n]";
+            }
+
+            try (FileWriter fileWriter = new FileWriter(file, false)) {
+                fileWriter.write(finalJsonArray);
+            }
+            return "Message successfully stored.";
         } catch (IOException e) {
             return "Failed to store message: " + e.getMessage();
         }
     }
 
-    // Returns full formatted details of a message
+    // Returns formatted details of the message[cite: 13, 14]
     public String printMessages() {
         return "Message ID: " + messageID + "\n" +
                "Message Hash: " + messageHash + "\n" +
@@ -112,20 +127,35 @@ public class Message {
     }
 
     // Getters and Setters
+    public String getMessageID() {
+        return messageID;
+    }
+
+    public void setMessageID(String messageID) {
+        this.messageID = messageID;
+    }
+
+    public String getRecipientCell() {
+        return recipientCell;
+    }
+
     public void setRecipientCell(String recipientCell) {
         this.recipientCell = recipientCell;
+    }
+
+    public String getMessageText() {
+        return messageText;
     }
 
     public void setMessageText(String messageText) {
         this.messageText = messageText;
     }
 
-    public String getMessageID() {
-        return messageID;
-    }
-
     public String getMessageHash() {
         return messageHash;
     }
-}
 
+    public void setMessageHash(String messageHash) {
+        this.messageHash = messageHash;
+    }
+}

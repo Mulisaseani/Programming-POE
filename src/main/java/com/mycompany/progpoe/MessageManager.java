@@ -17,28 +17,25 @@ import java.util.ArrayList;
 
 public class MessageManager {
 
-    // Five required arrays/lists from Part 3 specification
+    // Five required collections from Part 3[cite: 17]
     private ArrayList<String> sentMessages = new ArrayList<>();
     private ArrayList<String> disregardedMessages = new ArrayList<>();
     private ArrayList<String> storedMessages = new ArrayList<>();
     private ArrayList<String> messageHashes = new ArrayList<>();
     private ArrayList<String> messageIDs = new ArrayList<>();
 
-    // Parallel lists to track recipients and senders for reports and searches
+    // Parallel collections for recipients and senders[cite: 17]
     private ArrayList<String> storedRecipients = new ArrayList<>();
     private ArrayList<String> storedSenders = new ArrayList<>();
 
-    // Add a sent message
     public void addSentMessage(String message) {
         sentMessages.add(message);
     }
 
-    // Add a disregarded message
     public void addDisregardedMessage(String message) {
         disregardedMessages.add(message);
     }
 
-    // Add a stored message along with its parallel array details
     public void addStoredMessage(String sender, String id, String hash, String recipient, String message) {
         storedSenders.add(sender);
         messageIDs.add(id);
@@ -48,8 +45,8 @@ public class MessageManager {
     }
 
     /**
-     * Reads stored JSON objects from 'messages.json' into the parallel arrays.
-     * Reference / Attribution: https://www.w3schools.com/java/java_files_read.asp
+     * Reads JSON array objects from 'messages.json' into parallel arrays[cite: 17].
+     * Reference / Attribution: https://www.w3schools.com/java/java_files_read.asp[cite: 26]
      */
     public void loadStoredMessagesFromJSON(String defaultSender) {
         File file = new File("messages.json");
@@ -71,7 +68,7 @@ public class MessageManager {
                     recipient = extractJsonValue(line);
                 } else if (line.startsWith("\"message\":")) {
                     text = extractJsonValue(line);
-                } else if (line.equals("}")) {
+                } else if (line.equals("}") || line.equals("},")) {
                     if (!id.isEmpty() && !messageIDs.contains(id)) {
                         addStoredMessage(defaultSender, id, hash, recipient, text);
                     }
@@ -86,7 +83,6 @@ public class MessageManager {
         }
     }
 
-    // Helper method to clean quotes and commas from JSON lines
     private String extractJsonValue(String line) {
         int colonIndex = line.indexOf(":");
         String value = line.substring(colonIndex + 1).trim();
@@ -99,7 +95,7 @@ public class MessageManager {
         return value;
     }
 
-    // Option 4a: Display the sender and recipient of all stored messages
+    // Option 4a: Display sender and recipient of all stored messages[cite: 17]
     public String displaySenderAndRecipient() {
         if (storedMessages.isEmpty()) {
             return "No stored messages available.";
@@ -112,7 +108,7 @@ public class MessageManager {
         return sb.toString().trim();
     }
 
-    // Option 4b: Display the longest stored message
+    // Option 4b: Display longest stored message[cite: 17]
     public String getLongestStoredMessage() {
         if (storedMessages.isEmpty()) {
             return "No stored messages available.";
@@ -126,7 +122,7 @@ public class MessageManager {
         return longest;
     }
 
-    // Option 4c: Search for a message ID and display the corresponding recipient and message
+    // Option 4c: Search by message ID[cite: 17]
     public String searchByMessageID(String id) {
         for (int i = 0; i < messageIDs.size(); i++) {
             if (messageIDs.get(i).equals(id)) {
@@ -136,7 +132,7 @@ public class MessageManager {
         return "Message ID not found.";
     }
 
-    // Option 4d: Search for all messages stored for a particular recipient
+    // Option 4d: Search all stored messages for a particular recipient[cite: 17]
     public String searchByRecipient(String recipient) {
         StringBuilder sb = new StringBuilder();
         boolean found = false;
@@ -155,7 +151,7 @@ public class MessageManager {
         return sb.toString();
     }
 
-    // Option 4e: Delete a message using the message hash
+    // Option 4e: Delete a message using message hash[cite: 17]
     public String deleteMessageByHash(String hash) {
         for (int i = 0; i < messageHashes.size(); i++) {
             if (messageHashes.get(i).equalsIgnoreCase(hash)) {
@@ -173,7 +169,7 @@ public class MessageManager {
         return "Message hash not found.";
     }
 
-    // Option 4f: Display a report that lists the full details of all stored messages
+    // Option 4f: Display full report of all stored messages[cite: 17]
     public String displayStoredMessagesReport() {
         if (storedMessages.isEmpty()) {
             return "No stored messages to display in report.";
@@ -193,7 +189,7 @@ public class MessageManager {
         return report.toString();
     }
 
-    // Getters for arrays (used in unit tests)
+    // Getters for unit tests
     public ArrayList<String> getSentMessages() {
         return sentMessages;
     }
@@ -214,4 +210,3 @@ public class MessageManager {
         return messageIDs;
     }
 }
-

@@ -14,19 +14,19 @@ public class ProgPOE {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Login loginSystem = new Login();
-        MessageManager manager = new MessageManager(); // Added for Part 3 arrays
+        MessageManager manager = new MessageManager();
 
         System.out.println("--- REGISTRATION ---");
-        
+
         System.out.print("Enter First Name: ");
-        String firstName = scanner.nextLine(); // Saved to variable for sender tracking
+        String firstName = scanner.nextLine();
         loginSystem.setFirstName(firstName);
-        
+
         System.out.print("Enter Last Name: ");
-        String lastName = scanner.nextLine(); // Saved to variable for sender tracking
+        String lastName = scanner.nextLine();
         loginSystem.setLastName(lastName);
 
-        // Username Registration
+        // Username Registration[cite: 6]
         String username;
         while (true) {
             System.out.print("Enter a Username: ");
@@ -39,7 +39,7 @@ public class ProgPOE {
             }
         }
 
-        // Password Registration
+        // Password Registration[cite: 6]
         String password;
         while (true) {
             System.out.print("Enter a Password: ");
@@ -52,7 +52,7 @@ public class ProgPOE {
             }
         }
 
-        // Cell Phone Registration
+        // Cell Phone Registration[cite: 7]
         String cellNumber;
         while (true) {
             System.out.print("Enter an International Cell Phone Number (e.g., +27838968976): ");
@@ -65,17 +65,17 @@ public class ProgPOE {
             }
         }
 
-        // Finalize Registration
+        // Finalize Registration[cite: 8]
         String regStatus = loginSystem.registerUser(username, password, cellNumber);
         System.out.println(regStatus);
 
         System.out.println("\n--- LOGIN ---");
-        
-        // Login Loop
+
+        // Login Loop[cite: 7, 8]
         while (true) {
             System.out.print("Enter Username: ");
             String loginUser = scanner.nextLine();
-            
+
             System.out.print("Enter Password: ");
             String loginPass = scanner.nextLine();
 
@@ -83,15 +83,14 @@ public class ProgPOE {
             System.out.println(loginSystem.returnLoginStatus(isSuccess));
 
             if (isSuccess) {
-                break; // Exit loop on successful login
+                break;
             }
         }
-        
+
         // ==========================================
-        // PART 2 & PART 3: QuickChat Application Feature
+        // PART 2 & PART 3: QuickChat Application[cite: 11, 17]
         // ==========================================
-        
-        // Load previously stored JSON messages into Part 3 arrays
+
         String fullName = firstName + " " + lastName;
         manager.loadStoredMessagesFromJSON(fullName);
 
@@ -100,7 +99,6 @@ public class ProgPOE {
         boolean running = true;
         int totalMessagesSent = 0;
 
-        // Main Menu Loop
         while (running) {
             System.out.println("\nPlease select an option:");
             System.out.println("1) Send Messages");
@@ -110,19 +108,19 @@ public class ProgPOE {
             System.out.print("Option: ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline characters
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
                     System.out.print("How many messages would you like to enter? ");
                     int totalToEnter = scanner.nextInt();
-                    scanner.nextLine(); // consume newline character
+                    scanner.nextLine();
 
                     for (int i = 0; i < totalToEnter; i++) {
                         System.out.println("\n--- Entering Message " + (i + 1) + " of " + totalToEnter + " ---");
                         Message msg = new Message();
 
-                        // 1. Recipient Cell Input & Validation
+                        // 1. Recipient Cell Validation[cite: 12]
                         String recipient;
                         while (true) {
                             System.out.print("Enter Recipient Cell Number: ");
@@ -135,7 +133,7 @@ public class ProgPOE {
                             }
                         }
 
-                        // 2. Message Text Input & Validation
+                        // 2. Message Text Validation[cite: 12]
                         String text;
                         while (true) {
                             System.out.print("Enter Message (Max 250 characters): ");
@@ -149,38 +147,37 @@ public class ProgPOE {
                             }
                         }
 
-                        // 3. Generate Message ID and Message Hash
+                        // 3. Auto-generate Message ID and Message Hash[cite: 12]
                         String msgID = msg.generateMessageID();
                         String msgHash = msg.createMessageHash(msgID, i, text);
 
                         System.out.println("Message ID generated: " + msgID);
                         System.out.println("Message Hash generated: " + msgHash);
 
-                        // 4. Action Choice (Send, Disregard, or Store)
+                        // 4. Send / Disregard / Store Action[cite: 13]
                         System.out.println("\nChoose action:");
                         System.out.println("1) Send Message");
                         System.out.println("2) Disregard Message");
                         System.out.println("3) Store Message in a JSON file");
                         System.out.print("Choice: ");
                         int action = scanner.nextInt();
-                        scanner.nextLine(); // consume newline character
+                        scanner.nextLine();
 
                         String actionResult = msg.sentMessage(action);
                         System.out.println(actionResult);
 
-                        // Populate Part 3 arrays based on action chosen
+                        // Only display details when Sent (action == 1)[cite: 13]
                         if (action == 1) {
                             totalMessagesSent++;
                             manager.addSentMessage(text);
+
+                            System.out.println("\n--- Message Details ---");
+                            System.out.println(msg.printMessages());
                         } else if (action == 2) {
                             manager.addDisregardedMessage(text);
                         } else if (action == 3) {
                             manager.addStoredMessage(fullName, msgID, msgHash, recipient, text);
                         }
-
-                        // Display full message details
-                        System.out.println("\n--- Message Details ---");
-                        System.out.println(msg.printMessages());
                     }
 
                     System.out.println("\nTotal messages sent during this session: " + totalMessagesSent);
@@ -196,7 +193,7 @@ public class ProgPOE {
                     break;
 
                 case 4:
-                    // Part 3: Stored Messages Submenu
+                    // Part 3 Stored Messages Submenu[cite: 17]
                     System.out.println("\n--- STORED MESSAGES ---");
                     System.out.println("a) Display the sender and recipient of all stored messages");
                     System.out.println("b) Display the longest stored message");
@@ -243,7 +240,7 @@ public class ProgPOE {
                     break;
             }
         }
-        
+
         scanner.close();
     }
 }
