@@ -85,5 +85,23 @@ public class MessageTest {
         String actual = message.sentMessage(2);
         assertEquals(expected, actual);
     }
+@Test
+    public void testMessageHashesInLoop() {
+        String[] messageIDs = {"0012345678", "1298765432", "9911223344"};
+        String[] messages = {
+            "Hi Mike, can you join us for dinner tonight?",
+            "Hello world",
+            "Coding in Java is fun"
+        };
+        String[] expectedHashes = {
+            "00:0:HITONIGHT",
+            "12:1:HELLOWORLD",
+            "99:2:CODINGFUN"
+        };
 
+        for (int i = 0; i < messages.length; i++) {
+            String actualHash = message.createMessageHash(messageIDs[i], i, messages[i]);
+            assertEquals(expectedHashes[i], actualHash);
+        }
+    }
 }
