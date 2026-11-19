@@ -26,7 +26,7 @@ public class Message {
     // Validates that the recipient cell number starts with '+' and is no more than 10 digits after/including length rules
     // Reuses the regex logic established in Part 1
     public String checkRecipientCell(String cellNumber) {
-        if (cellNumber != null && cellNumber.startsWith("+") && cellNumber.length() <= 13) {
+        if (cellNumber != null && cellNumber.startsWith("+27") && cellNumber.length() <= 13) {
             return "Cell phone number successfully captured.";
         } else {
             return "Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.";

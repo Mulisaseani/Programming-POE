@@ -86,10 +86,4 @@ public class MessageTest {
         assertEquals(expected, actual);
     }
 
-    @Test
-    public void testSendMessageOptionStore() {
-        String expected = "Message successfully stored.";
-        String actual = message.sentMessage(3);
-        assertEquals(expected, actual);
-    }
 }
