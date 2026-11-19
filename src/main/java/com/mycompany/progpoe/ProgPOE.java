@@ -14,14 +14,17 @@ public class ProgPOE {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Login loginSystem = new Login();
+        MessageManager manager = new MessageManager(); // Added for Part 3 arrays
 
         System.out.println("--- REGISTRATION ---");
         
         System.out.print("Enter First Name: ");
-        loginSystem.setFirstName(scanner.nextLine());
+        String firstName = scanner.nextLine(); // Saved to variable for sender tracking
+        loginSystem.setFirstName(firstName);
         
         System.out.print("Enter Last Name: ");
-        loginSystem.setLastName(scanner.nextLine());
+        String lastName = scanner.nextLine(); // Saved to variable for sender tracking
+        loginSystem.setLastName(lastName);
 
         // Username Registration
         String username;
@@ -85,9 +88,13 @@ public class ProgPOE {
         }
         
         // ==========================================
-        // PART 2: QuickChat Application Feature
+        // PART 2 & PART 3: QuickChat Application Feature
         // ==========================================
         
+        // Load previously stored JSON messages into Part 3 arrays
+        String fullName = firstName + " " + lastName;
+        manager.loadStoredMessagesFromJSON(fullName);
+
         System.out.println("\nWelcome to QuickChat.");
 
         boolean running = true;
@@ -99,6 +106,7 @@ public class ProgPOE {
             System.out.println("1) Send Messages");
             System.out.println("2) Show recently sent messages");
             System.out.println("3) Quit");
+            System.out.println("4) Stored Messages");
             System.out.print("Option: ");
 
             int choice = scanner.nextInt();
@@ -160,8 +168,14 @@ public class ProgPOE {
                         String actionResult = msg.sentMessage(action);
                         System.out.println(actionResult);
 
+                        // Populate Part 3 arrays based on action chosen
                         if (action == 1) {
                             totalMessagesSent++;
+                            manager.addSentMessage(text);
+                        } else if (action == 2) {
+                            manager.addDisregardedMessage(text);
+                        } else if (action == 3) {
+                            manager.addStoredMessage(fullName, msgID, msgHash, recipient, text);
                         }
 
                         // Display full message details
@@ -181,8 +195,51 @@ public class ProgPOE {
                     running = false;
                     break;
 
+                case 4:
+                    // Part 3: Stored Messages Submenu
+                    System.out.println("\n--- STORED MESSAGES ---");
+                    System.out.println("a) Display the sender and recipient of all stored messages");
+                    System.out.println("b) Display the longest stored message");
+                    System.out.println("c) Search for a message ID");
+                    System.out.println("d) Search for all messages stored for a particular recipient");
+                    System.out.println("e) Delete a message using the message hash");
+                    System.out.println("f) Display Stored Messages Report");
+                    System.out.print("Select option (a-f): ");
+                    String subChoice = scanner.nextLine().toLowerCase();
+
+                    switch (subChoice) {
+                        case "a":
+                            System.out.println(manager.displaySenderAndRecipient());
+                            break;
+                        case "b":
+                            System.out.println("Longest Stored Message: " + manager.getLongestStoredMessage());
+                            break;
+                        case "c":
+                            System.out.print("Enter Message ID to search: ");
+                            String searchID = scanner.nextLine();
+                            System.out.println(manager.searchByMessageID(searchID));
+                            break;
+                        case "d":
+                            System.out.print("Enter Recipient Cell Number to search: ");
+                            String searchRecipient = scanner.nextLine();
+                            System.out.println(manager.searchByRecipient(searchRecipient));
+                            break;
+                        case "e":
+                            System.out.print("Enter Message Hash to delete: ");
+                            String deleteHash = scanner.nextLine();
+                            System.out.println(manager.deleteMessageByHash(deleteHash));
+                            break;
+                        case "f":
+                            System.out.println(manager.displayStoredMessagesReport());
+                            break;
+                        default:
+                            System.out.println("Invalid option. Please select a, b, c, d, e, or f.");
+                            break;
+                    }
+                    break;
+
                 default:
-                    System.out.println("Invalid option. Please choose 1, 2, or 3.");
+                    System.out.println("Invalid option. Please choose 1, 2, 3, or 4.");
                     break;
             }
         }
